@@ -16,12 +16,8 @@
 </template>
 
 <script>
-import {defineComponent} from "vue";
-import Marquee from "~/components/Marquee.vue";
 
-export default defineComponent({
-  components: {Marquee}
-})
+
 
 definePageMeta({
   favicon: "/favicon.ico",
