@@ -1,31 +1,47 @@
 <script setup>
 import { computed, onMounted, ref } from "vue";
 
-const monitorData = ref(null)
+const monitorData = ref(null);
+const isAboutModalOpen = ref(false);
 
 onMounted(async () => {
   monitorData.value = await $fetch('/api/latest-value').catch(() => null)
 
-  // Initialize AOS after the component is mounted
   if (process.client) {
     import('aos').then((AOS) => {
       AOS.init({
-        duration: 800,        // Animation duration
-        easing: 'ease-in-out', // Animation easing
-        once: false,          // Whether animation should happen only once
-        mirror: true,         // Whether elements should animate out while scrolling past them
-        offset: 50,          // Offset (in px) from the original trigger point
+        duration: 800,
+        easing: 'ease-in-out',
+        once: false,
+        mirror: true,
+        offset: 50,
       });
     });
   }
 })
+
+const scrollToSection = (id) => {
+  const element = document.getElementById(id);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' });
+  }
+};
+
+const openAboutModal = () => {
+  isAboutModalOpen.value = true;
+  document.body.style.overflow = 'hidden';
+};
+
+const closeAboutModal = () => {
+  isAboutModalOpen.value = false;
+  document.body.style.overflow = 'auto';
+};
 
 const trafficDateReadable = computed(() => {
   if (!monitorData.value?.taken_at) return 'Loading...'
   const dateObj = new Date(monitorData.value.taken_at)
   return dateObj.toLocaleString()
 })
-console.log(monitorData)
 </script>
 
 <template>
@@ -45,9 +61,9 @@ console.log(monitorData)
           Kami coba untuk mengatasi masalah kemacetan di Bali dengan menggunakan Artificial Intelligence dengan kontrol lampu merah adaptif yang
           ditenagai oleh pembangkit listrik tenaga surya
         </p>
-        <div data-aos="zoom-in" data-aos-delay="600" class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
-          <a href="#"
-             class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-red-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300">
+        <div class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
+          <a @click="scrollToSection('traffic-data')"
+             class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 cursor-pointer">
             Cek tingkat kemacetan
             <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                  fill="none" viewBox="0 0 14 10">
@@ -55,15 +71,98 @@ console.log(monitorData)
                     d="M1 5h12m0 0L9 1m4 4L9 9"/>
             </svg>
           </a>
-          <a href="#"
-             class="py-3 px-5 sm:ms-4 text-sm font-medium text-white focus:outline-none bg-transparent rounded-lg border border-white hover:bg-white hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-white">
+          <button @click="openAboutModal"
+                  class="py-3 px-5 sm:ms-4 text-sm font-medium text-white focus:outline-none bg-transparent rounded-lg border border-white hover:bg-white hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-white cursor-pointer">
             Tentang kami
-          </a>
+          </button>
         </div>
       </div>
     </section>
-    <!--- End of Jumbotron ---->
 
+    <!-- Modal Tentang Kami -->
+    <transition name="modal-fade">
+      <div v-if="isAboutModalOpen" class="fixed inset-0 z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+          <!-- Overlay -->
+          <div class="fixed inset-0 transition-opacity" @click="closeAboutModal">
+            <div class="absolute inset-0 bg-black opacity-70"></div>
+          </div>
+
+          <!-- Modal Content -->
+          <div class="inline-block align-bottom bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+               data-aos="zoom-in">
+            <div class="bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+              <div class="sm:flex sm:items-start">
+                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                  <div class="flex justify-between items-center">
+                    <h3 class="text-2xl leading-6 font-bold text-white" id="modal-title">
+                      Tentang Kami
+                    </h3>
+                    <button @click="closeAboutModal" class="text-gray-400 hover:text-white">
+                      <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <div class="mt-4">
+                    <p class="text-gray-300">
+                      Arial Project adalah inisiatif mahasiswa Teknik Elektro untuk mengatasi kemacetan di Bali melalui:
+                    </p>
+                    <ul class="mt-3 text-gray-300 list-disc list-inside space-y-2">
+                      <li>Sistem lampu lalu lintas adaptif berbasis AI</li>
+                      <li>Ditenagai oleh pembangkit listrik tenaga surya</li>
+                      <li>Monitoring real-time kepadatan lalu lintas</li>
+                    </ul>
+
+                    <div class="mt-6 border-t border-gray-700 pt-4">
+                      <h4 class="font-semibold text-white">Tim Pengembang:</h4>
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                        <div class="flex items-center space-x-3">
+                          <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center text-white">
+                            74
+                          </div>
+                          <div>
+                            <p class="text-sm font-medium text-white">I Putu Gede Pringga A.P (Leader)</p>
+                            <p class="text-xs text-gray-400">Mechanics & Power System</p>
+                          </div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                          <div class="flex-shrink-0 h-10 w-10 rounded-full bg-purple-500 flex items-center justify-center text-white">
+                            63
+                          </div>
+                          <div>
+                            <p class="text-sm font-medium text-white">Rayhan Kimi Nabiel A.</p>
+                            <p class="text-xs text-gray-400">Backend & Computer Vision Devlp.</p>
+                          </div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                          <div class="flex-shrink-0 h-10 w-10 rounded-full bg-purple-500 flex items-center justify-center text-white">
+                            58
+                          </div>
+                          <div>
+                            <p class="text-sm font-medium text-white">Jonathan Marthen Mamboran</p>
+                            <p class="text-xs text-gray-400">Electronics & Hardware Devlp.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+              <button type="button"
+                      @click="closeAboutModal"
+                      class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
+
+    <!-- Rest of your existing template remains the same -->
     <section class="relative min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-gray-600 to-gray-900">
       <!-- Left Section -->
       <div data-aos="fade-right" data-aos-duration="1000" class="w-full md:w-1/2 flex bg-gradient-to-br flex-col from-gray-800 to-gray-700">
@@ -106,7 +205,7 @@ console.log(monitorData)
       </div>
 
       <!-- Right Section -->
-      <div data-aos="fade-left" data-aos-duration="1000"
+      <div data-aos="fade-left" id="traffic-data" data-aos-duration="1000"
            class="w-full md:w-1/2 h-1/3 md:h-auto flex flex-col items-start justify-center order-2 md:order-3 p-6 md:p-10">
         <div
             class="p-6 md:p-10 h-full w-full bg-gradient-to-br from-white to-gray-300 rounded-2xl shadow-xl border-l-4 border-gray-600">
@@ -120,7 +219,7 @@ console.log(monitorData)
           </div>
 
           <!-- Location section -->
-          <div data-aos="fade-up" data-aos-delay="400" class="mb-8 pb-6 border-b border-gray-200">
+          <div  data-aos="fade-up" data-aos-delay="400" class="mb-8 pb-6 border-b border-gray-200">
             <div class="flex items-start">
               <div class="bg-blue-50 p-2 rounded-lg mr-4">
                 <i class="fas fa-map-marked-alt text-blue-600 text-xl"></i>
@@ -218,19 +317,32 @@ console.log(monitorData)
       </div>
 
     </section>
-
   </div>
 </template>
 
 <style scoped>
-/* Add custom styles for AOS animations if needed */
-[data-aos] {
-  pointer-events: none; /* Mencegah konflik touch di iOS */
-  transform: translateZ(0); /* Aktifkan hardware acceleration */
+/* Existing styles... */
+
+/* Modal Transition */
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.3s ease;
 }
-@supports (-webkit-touch-callout: none) {
-  body {
-    -webkit-overflow-scrolling: touch;
-  }
+
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+}
+
+/* Modal Content Animation */
+[data-aos="zoom-in"] {
+  transform: scale(0.95);
+  opacity: 0;
+  transition-property: transform, opacity;
+}
+
+[data-aos="zoom-in"].aos-animate {
+  transform: scale(1);
+  opacity: 1;
 }
 </style>
