@@ -322,7 +322,16 @@ const trafficDateReadable = computed(() => {
 
 <style scoped>
 /* Existing styles... */
-
+/* Add custom styles for AOS animations if needed */
+[data-aos] {
+  pointer-events: none; /* Mencegah konflik touch di iOS */
+  transform: translateZ(0); /* Aktifkan hardware acceleration */
+}
+@supports (-webkit-touch-callout: none) {
+  body {
+    -webkit-overflow-scrolling: touch;
+  }
+}
 /* Modal Transition */
 .modal-fade-enter-active,
 .modal-fade-leave-active {
