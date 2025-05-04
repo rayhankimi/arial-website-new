@@ -12,7 +12,7 @@ onMounted(async () => {
       AOS.init({
         duration: 800,        // Animation duration
         easing: 'ease-in-out', // Animation easing
-        once: false,          // Whether animation should happen only once
+        once: true,          // Whether animation should happen only once
         mirror: true,         // Whether elements should animate out while scrolling past them
         offset: 120,          // Offset (in px) from the original trigger point
       });
@@ -25,6 +25,7 @@ const trafficDateReadable = computed(() => {
   const dateObj = new Date(monitorData.value.taken_at)
   return dateObj.toLocaleString()
 })
+console.log(monitorData)
 </script>
 
 <template>
@@ -143,7 +144,7 @@ const trafficDateReadable = computed(() => {
               <div>
                 <h4 class="text-lg font-medium text-gray-800">Data diambil pada</h4>
                 <p class="text-gray-600 bg-gray-100 px-3 py-1 rounded-md mt-1 inline-block">
-                  {{ monitorData?.value || "Data tidak tersedia.." }}
+                  {{ trafficDateReadable || "Data tidak tersedia.." }}
                 </p>
               </div>
             </div>
@@ -156,7 +157,7 @@ const trafficDateReadable = computed(() => {
               <div>
                 <h4 class="text-lg font-medium text-gray-800">Tingkat Kepadatan</h4>
                 <p class="text-gray-600 bg-gray-100 px-3 py-1 rounded-md mt-1 inline-block">
-                  {{ trafficDateReadable || "Tingkat kemacetan tidak tersedia.." }}
+                  {{ monitorData?.value || "Tingkat kemacetan tidak tersedia.." }}
                 </p>
               </div>
             </div>
@@ -174,7 +175,7 @@ const trafficDateReadable = computed(() => {
                       <i class="fas fa-motorcycle text-gray-500"></i>
                       <div>
                         <div class="text-xs text-gray-500">Motor</div>
-                        <div class="font-medium">{{ monitorData?.motorcycle_count || "Data tidak tersedia" }}</div>
+                        <div class="font-medium">{{ monitorData?.motorcycle_count || 0 }}</div>
                       </div>
                     </div>
 
@@ -182,7 +183,7 @@ const trafficDateReadable = computed(() => {
                       <i class="fas fa-car text-gray-500"></i>
                       <div>
                         <div class="text-xs text-gray-500">Mobil</div>
-                        <div class="font-medium">{{ monitorData?.car_count || "Data tidak tersedia" }}</div>
+                        <div class="font-medium">{{ monitorData?.car_count ||  0 }}</div>
                       </div>
                     </div>
 
@@ -190,7 +191,7 @@ const trafficDateReadable = computed(() => {
                       <i class="fas fa-truck-pickup text-gray-500"></i>
                       <div>
                         <div class="text-xs text-gray-500">Truck Kecil</div>
-                        <div class="font-medium">{{ monitorData?.smalltruck_count || "Data tidak tersedia" }}</div>
+                        <div class="font-medium">{{ monitorData?.smalltruck_count || 0 }}</div>
                       </div>
                     </div>
 
@@ -198,7 +199,7 @@ const trafficDateReadable = computed(() => {
                       <i class="fas fa-truck text-gray-500"></i>
                       <div>
                         <div class="text-xs text-gray-500">Kendaraan Besar</div>
-                        <div class="font-medium">{{ monitorData?.bigvehicle_count || "Data tidak tersedia" }}</div>
+                        <div class="font-medium">{{ monitorData?.bigvehicle_count || 0  }}</div>
                       </div>
                     </div>
                   </div>
