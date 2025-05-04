@@ -12,9 +12,9 @@ onMounted(async () => {
       AOS.init({
         duration: 800,        // Animation duration
         easing: 'ease-in-out', // Animation easing
-        once: true,          // Whether animation should happen only once
+        once: false,          // Whether animation should happen only once
         mirror: true,         // Whether elements should animate out while scrolling past them
-        offset: 120,          // Offset (in px) from the original trigger point
+        offset: 50,          // Offset (in px) from the original trigger point
       });
     });
   }
@@ -31,7 +31,7 @@ console.log(monitorData)
 <template>
   <div>
     <!--- Jumbotron ---->
-    <section class="relative min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat"
+    <section class="relative min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat overflow-hidden"
              style="background-image: url('/traffic.png');">
       <!-- Overlay gelap -->
       <div class="absolute inset-0 bg-black bg-opacity-80"></div>
@@ -73,7 +73,7 @@ console.log(monitorData)
           <figure data-aos="flip-left" data-aos-delay="400"
                   class="w-full max-w-md overflow-hidden rounded-xl shadow-2xl transform transition-transform hover:scale-102">
             <div class="relative">
-              <img :src="monitorData?.image" alt="Gambar Kemacetan" class="w-full h-auto object-cover">
+              <img :src="monitorData?.image" alt="Gambar Kemacetan" class="w-full h-auto object-cover max-w-full">
               <div class="absolute inset-0 bg-black bg-opacity-20 hover:bg-opacity-10 transition-all"></div>
             </div>
             <figcaption class="p-3 bg-gray-900 text-white text-sm">
@@ -224,4 +224,13 @@ console.log(monitorData)
 
 <style scoped>
 /* Add custom styles for AOS animations if needed */
+[data-aos] {
+  pointer-events: none; /* Mencegah konflik touch di iOS */
+  transform: translateZ(0); /* Aktifkan hardware acceleration */
+}
+@supports (-webkit-touch-callout: none) {
+  body {
+    -webkit-overflow-scrolling: touch;
+  }
+}
 </style>
