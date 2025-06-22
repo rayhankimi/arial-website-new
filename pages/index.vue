@@ -213,7 +213,7 @@ const trafficDateReadable = computed(() => {
           <div data-aos="fade-down" data-aos-delay="300" class="flex items-center mb-8">
             <div class="w-2 h-12 bg-yellow-600 mr-4 rounded-full"></div>
             <div>
-              <h2 class="text-2xl md:text-3xl lg:text-4xl text-gray-800 font-bold tracking-tight">Tingkat Kemacetan</h2>
+              <h2 class="text-2xl md:text-3xl lg:text-4xl text-gray-800 font-bold tracking-tight">Volume Kendaraan</h2>
               <p class="text-sm text-gray-500 mt-1">Analisis data terkini</p>
             </div>
           </div>
@@ -256,7 +256,7 @@ const trafficDateReadable = computed(() => {
               <div>
                 <h4 class="text-lg font-medium text-gray-800">Volume Kepadatan</h4>
                 <p class="text-gray-600 bg-gray-100 px-3 py-1 rounded-md mt-1 inline-block">
-                  {{ monitorData?.value || "Tingkat kemacetan tidak tersedia.." }}
+                  {{ monitorData?.value || "Volume kendaraan sedang tidak tersedia" }}
                 </p>
               </div>
             </div>
