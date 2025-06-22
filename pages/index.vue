@@ -64,7 +64,7 @@ const trafficDateReadable = computed(() => {
         <div class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
           <a @click="scrollToSection('traffic-data')"
              class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 cursor-pointer">
-            Cek tingkat kemacetan
+            Cek volume kendaraan
             <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                  fill="none" viewBox="0 0 14 10">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -254,7 +254,7 @@ const trafficDateReadable = computed(() => {
                 <i class="fas fa-car-crash text-red-600"></i>
               </div>
               <div>
-                <h4 class="text-lg font-medium text-gray-800">Tingkat Kepadatan</h4>
+                <h4 class="text-lg font-medium text-gray-800">Volume Kepadatan</h4>
                 <p class="text-gray-600 bg-gray-100 px-3 py-1 rounded-md mt-1 inline-block">
                   {{ monitorData?.value || "Tingkat kemacetan tidak tersedia.." }}
                 </p>
